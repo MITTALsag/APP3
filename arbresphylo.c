@@ -50,8 +50,28 @@ void analyse_arbre_corps(arbre racine, int* nb_esp, int* nb_carac){
  */
 int rechercher_espece (arbre racine, char *espece, liste_t* seq)
 {
-    /* à compléter */
-    return 1;
+   int res;
+
+   if (!racine)
+      return 1;
+   //si on a trouvé l'espece cherché
+   if (!strcmp(racine->valeur, espece)) 
+      return 0;
+
+   res = rechercher_espece(racine->gauche, espece, seq);
+   //si res = 0 cela veux dire que l'espece n'a la carctéristique courante
+   if (res == 0){
+      return 0;
+   }
+
+   res = rechercher_espece(racine->droit, espece, seq);
+   //si res = 0 cela signifie que l'espece se trouve a droite et donc que la caractéristique courante doit etre dans la sequence
+   if (res == 0){
+      ajouter_tete(seq, racine->valeur);
+      return 0;
+   }
+
+   return 1; //on n'a pas touvé l'espece
 }
 
 

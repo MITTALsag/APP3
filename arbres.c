@@ -162,8 +162,8 @@ void affiche_arbre (arbre ar)
 
     scanf("%c", &c);
     while (c != 'y' && c != 'n'){
+        printf("Il faut choisir entre y pour afficher ou n pour ne pas l'afficher !!!\n");
         scanf("%c", &c);
-       printf("Il faut choisir entre y pour afficher ou n pour ne pas l'afficher !!!\n");
     }
     
     if (c == 'y'){

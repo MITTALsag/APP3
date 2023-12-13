@@ -19,8 +19,15 @@ struct liste {
 
 typedef struct liste liste_t;
 
+/* cree une nouvelle cellule */
+cellule_t* nouvelle_cellule(string c);
+
 /* cree une nouvelle liste, initialement vide */
 void init_liste_vide(liste_t* L);
+
+
+/* libère une cellule */
+void liberer_cel(cellule_t* cel);
 
 /* libère toutes les cellules de la liste */
 void liberer_liste(liste_t *L);
@@ -31,6 +38,8 @@ void liberer_liste(liste_t *L);
  * et 1 sinon (échec de l'ajout)
  */
 int ajouter_tete(liste_t *L, string c);
+
+void afficher_list(liste_t* seq);
 
 
 #endif /* _LISTES_H */
