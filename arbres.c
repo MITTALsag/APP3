@@ -92,6 +92,37 @@ arbre lire_arbre (FILE *f)
 }
 
 
+void ecrire_arbre(arbre ar, char* nom_fich){
+    FILE* fich = fopen(nom_fich, "w");
+
+    if (!fich){
+        printf("Erreur lors de l'ouverture du fichier %s en écriture.\n", nom_fich);
+        exit(1);
+    }
+
+    ecrire_arbre_corp(ar, fich);
+
+    fclose(fich);
+}
+
+
+void ecrire_arbre_corp(arbre ar, FILE* fich){
+
+    if (!ar){
+        fprintf(fich, "/\n");
+        return;
+    }
+
+    fprintf(fich, "(%s\n", ar->valeur);
+
+    ecrire_arbre_corp(ar->gauche, fich);
+    ecrire_arbre_corp(ar->droit, fich);
+
+    fprintf(fich, ")\n");
+
+}
+
+
 //affichage de l'arbre
 /*----------------------------------------------------------------------------------------------------------------------------------*/
 

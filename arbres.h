@@ -32,6 +32,9 @@ noeud* nouveau_noeud (void);
  */
 arbre lire_arbre (FILE *f);
 
+/* fonction récursive qui écrit dans un fichier l'arbre qui correspond a ar au format de l'énoncé*/
+void ecrire_arbre(arbre ar, char* nom_fich);
+void ecrire_arbre_corp(arbre ar, FILE* fich);
 
 //met dans un fichier l'arbre sous format .dot pour pouvoir ensuite l'afficher
 //fonction recursive

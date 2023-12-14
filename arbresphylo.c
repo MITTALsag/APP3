@@ -79,9 +79,76 @@ int rechercher_espece (arbre racine, char *espece, liste_t* seq)
 /* Doit renvoyer 0 si l'espece a bien ete ajoutee, 1 sinon, et ecrire un 
  * message d'erreur.
  */
+
+void ajouter_list_car(arbre a, char* esp, cellule_t* seq){
+
+   while(seq){
+      a->valeur = seq->val;
+
+      a->droit = nouveau_noeud();
+      a = a->droit;
+
+      seq = seq->suivant;
+   }
+
+   a->valeur = esp;
+}
+
+
 int ajouter_espece (arbre* a, char *espece, cellule_t* seq) {
 
-    return 1;
+   noeud* noeud;
+
+   if (!seq){
+
+      if (!(*a)){
+         //arbre vide et pas de car a mettre
+         noeud = nouveau_noeud();
+         noeud->valeur = espece;
+         (*a) = noeud;
+         return 0;
+      }
+
+      if (!((*a)->gauche) && !((*a)->droit)){
+         //on est sur une feuille avec exactement les meme caracteristique qu'une autre espece
+         printf("Ne peut pas ajouter %s: possède les mêmes caractères que %s.\n", espece, (*a)->valeur);
+			return 1;
+      }
+      return ajouter_espece(&((*a)->gauche), espece, NULL);
+
+   }     
+
+   if (!(*a)){
+      //si arbre vide on ajoute toutes les caracteristique puis l'espece
+      noeud = nouveau_noeud();
+      *a = noeud;
+      ajouter_list_car(*a, espece, seq);
+      return 0;
+   }
+
+   if (!((*a)->gauche) && !((*a)->droit)){
+      //place la feuille initial de l'arbre a gauche d'une carc de seq puis met toutes les carac de seq et ensuite l'espece a rajouter
+
+      (*a)->gauche = nouveau_noeud();
+		(*a)->gauche->valeur = (*a)->valeur;
+
+		(*a)->valeur = seq->val;
+		(*a)->droit = nouveau_noeud();
+
+		ajouter_list_car(((*a)->droit), espece, seq->suivant);
+
+		return 0;
+   }
+
+   if (!strcmp(seq->val, (*a)->valeur)){
+      //si les carac sont égales on continue de chercher a droite avec les carac suivantes
+
+      return ajouter_espece(&(*a)->droit, espece, seq->suivant);
+   }
+
+   //sinon on cherche a gauche avec la meme carac
+   return ajouter_espece(&(*a)->gauche, espece, seq);
+
 }
 
 /* Doit afficher la liste des caractéristiques niveau par niveau, de gauche

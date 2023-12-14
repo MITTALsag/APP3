@@ -18,6 +18,8 @@ void analyse_arbre_corps(arbre racine, int* nb_esp, int* nb_carac);
 int rechercher_espece (arbre racine, char *espece, liste_t* seq);
 
 
+
+void ajouter_list_car(arbre a, char* esp, cellule_t* seq);
 int ajouter_espece (arbre* racine, char *espece, cellule_t* seq);
 
 void afficher_par_niveau(arbre racine, FILE* fout);
