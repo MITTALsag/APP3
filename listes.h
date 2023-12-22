@@ -1,6 +1,7 @@
 #ifndef _LISTES_H
 #define _LISTES_H
 
+
 typedef struct liste liste_t;
 /* Type de liste à compléter selon votre besoin. */
 
@@ -10,6 +11,8 @@ struct cellule {
 	string val;
 	struct cellule* suivant;
 };
+
+
 
 typedef struct cellule cellule_t;
 
@@ -25,6 +28,7 @@ cellule_t* nouvelle_cellule(string c);
 /* cree une nouvelle liste, initialement vide */
 void init_liste_vide(liste_t* L);
 
+int est_vide(liste_t* L);
 
 /* libère une cellule */
 void liberer_cel(cellule_t* cel);
@@ -39,7 +43,13 @@ void liberer_liste(liste_t *L);
  */
 int ajouter_tete(liste_t *L, string c);
 
-void afficher_list(liste_t* seq);
+void ajouter_fin(liste_t* L, string c);
+
+cellule_t* supprimmer_tete(liste_t* L);
+
+int longeur_seq(cellule_t* seq);
+
+int recherche_dans_seq(cellule_t *seq, string nom);
 
 
 #endif /* _LISTES_H */

@@ -30,7 +30,8 @@ void afficher_par_niveau(arbre racine, FILE* fout);
 // cas-là, ajout_espece fait l'affaire). Ceci permet d'éviter d'avoir à ajouter
 // des noeuds caractéristique sans enfant qui seraient confondues avec des
 // espèces/feuilles.
-int ajouter_carac(arbre* a, char* carac, cellule_t* seq);
 
+arbre parcours_pronf(arbre racine, char* carac, int* nb_esp_trouve , cellule_t* seq, int len_seq);
+int ajouter_carac(arbre* a, char* carac, cellule_t* seq);
 
 #endif

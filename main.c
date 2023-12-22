@@ -54,24 +54,16 @@ int main(int argc, char* argv[])
     int nombre_especes; /* Ne pas initialiser ici, c'est analyse_arbre */
     int nombre_caract;  /* qui doit s'en charger */
 
-    //affiche_arbre (mon_arbre);
+    affiche_arbre (mon_arbre);
 
     analyse_arbre (mon_arbre, &nombre_especes, &nombre_caract);
 
     printf ("Nombre d'especes de l'arbre: %d\n", nombre_especes);
     printf ("Nombre de caractéristiques de l'arbre: %d\n", nombre_caract);
 
-    cellule_t* seq;
+    afficher_par_niveau(mon_arbre, stdout);
 
-    cellule_t* cel = nouvelle_cellule("ecailles");
-    seq = cel;
-    cel = nouvelle_cellule("que");
-    seq->suivant = cel;
-    ajouter_espece(&mon_arbre, "drag", seq);
-    ecrire_arbre(mon_arbre, "test");
-    affiche_arbre(mon_arbre);
-
-
+    
     return 0;
 }
 

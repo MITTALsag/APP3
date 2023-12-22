@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <assert.h>
 #include "arbres.h"
 #include "arbresphylo.h"
 #include "listes.h"
+#include "file.h"
 
 void analyse_arbre (arbre racine, int* nb_esp, int* nb_carac)
 {
@@ -59,7 +61,7 @@ int rechercher_espece (arbre racine, char *espece, liste_t* seq)
       return 0;
 
    res = rechercher_espece(racine->gauche, espece, seq);
-   //si res = 0 cela veux dire que l'espece n'a la carctéristique courante
+   //si res = 0 cela veux dire que l'espece n'a pas la carctéristique courante
    if (res == 0){
       return 0;
    }
@@ -155,14 +157,124 @@ int ajouter_espece (arbre* a, char *espece, cellule_t* seq) {
  * à droite, dans le fichier fout.
  * Appeler la fonction avec fout=stdin pour afficher sur la sortie standard.
  */
-void afficher_par_niveau (arbre racine, FILE* fout) {
-   printf ("<<<<< À faire: fonction afficher_par_niveau fichier " __FILE__ "\n >>>>>");
+
+void afficher_par_niveau(arbre racine, FILE* fout){
+   if (!racine)
+      return;
+
+   liste_f file;
+   init_file_vide(&file);
+   cellule_f* cel = nouvelle_cellule_f();
+   cel->ar = racine;
+   cel->niveau = 0;
+   noeud* noeud;
+   enfiler(&file, cel);
+   int niv = -1;
+   int niv_cel;
+
+
+   while(!est_vide_f(&file)){
+      niv_cel = file.tete->niveau;
+      //printf("AAAA%d\n", niv_cel);
+      noeud = defiler(&file);
+      if (niv != niv_cel){
+         niv = niv_cel;
+         if (niv != 0)
+				fprintf(fout, "\n%s ", noeud->valeur);
+			else
+				fprintf(fout, "%s ", noeud->valeur);
+      }
+      else 
+         fprintf(fout, "%s ", noeud->valeur);
+      
+      if (noeud->gauche && (noeud->gauche->gauche || noeud->gauche->droit)){
+         cel = nouvelle_cellule_f();
+         cel->ar = noeud->gauche;
+         cel->niveau = niv_cel + 1;
+         enfiler(&file, cel);
+      }
+
+      if (noeud->droit && (noeud->droit->gauche || noeud->droit->droit)){
+         cel = nouvelle_cellule_f();
+         cel->ar = noeud->droit;
+         cel->niveau = niv_cel + 1;
+         enfiler(&file, cel);
+      }
+      
+   }
+
+   printf("\n");
+   liberer_liste_f(&file);
 }
 
 // Acte 4
 
+bool sous_arbre_en_cours = false;
+bool impoosible = false;
+bool trouve = false;
+int nb_esp_trouve = 0;
+
+arbre parcours_pronf(arbre racine, char* carac, int* nb_esp_trouve, cellule_t* seq, int len_seq) {
+
+   if (!racine)
+      return NULL;
+
+   if (!racine->gauche && !racine->droit) {
+      // Si la valeur de la feuille est dans la séquence
+      if (recherche_dans_seq(seq, racine->valeur)) {
+
+         if (!sous_arbre_en_cours){
+            sous_arbre_en_cours = true; 
+         }
+         *nb_esp_trouve += 1;
+
+      }
+      else{
+         if (sous_arbre_en_cours){
+            printf("Ne peut pas ajouter %s: ne forme pas un sous-arbre.\n", carac);    
+            impoosible = true; 
+         }
+      }
+      return NULL;
+   }
+
+   // Effectue une recherche récursive dans les sous-arbres gauche et droit
+   arbre sous_arbre_gauche = parcours_pronf(racine->gauche, carac, nb_esp_trouve, seq, len_seq);
+
+   if (*nb_esp_trouve == len_seq && !impoosible && !trouve){
+      trouve = true;
+      return racine;
+   }
+
+   arbre sous_arbre_droit = parcours_pronf(racine->droit, carac, nb_esp_trouve, seq, len_seq);
+
+   if (*nb_esp_trouve == len_seq && !impoosible && !trouve){
+      trouve = true;
+      return racine;
+   }
+
+   // Retourne le sous-arbre le plus profond entre gauche et droit
+   if (sous_arbre_gauche) {
+      return sous_arbre_gauche;
+   } 
+   if (sous_arbre_droit) {
+      return sous_arbre_droit;
+   }
+
+   return NULL;
+}
+
 
 int ajouter_carac(arbre* a, char* carac, cellule_t* seq) {
-   printf ("<<<<< À faire: fonction ajouter_carac fichier " __FILE__ "\n >>>>>");
-   return 0;
+   int len = longeur_seq(seq);
+   int nb_esp_trouve = 0;  // Initialise nb_esp_trouve à zéro
+   noeud* sous_arbre = parcours_pronf(*a, carac, &nb_esp_trouve, seq, len);
+
+   if (sous_arbre) {
+      
+
+      return 1;  // Succès
+   }
+
+   return 0;  // Échec
 }
